@@ -2,19 +2,21 @@ import express from 'express' //const express = require('express') in CommonJs
 
 const app = express();
 
-app.use((req, res, next) => {
-  console.log(`<h1>hello<h1>`)
-  next()
-})
+//middleware
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
 app.get('/', (req, res) => {
-  // res.send('hello')
-  // res.send('<h1>hello</h1>')
-  const user = {
-    name: 'Joe',
-    hobby: 'Singing'
-  }
-  res.send(user)
+  res.send("getting root")
+})
+
+app.get('/profile', (req, res) => {
+  res.send("getting profile")
+})
+
+app.post('/profile', (req, res) => {
+  console.log(req.body)
+  return res.send('success')
 })
 
 app.listen(3000);
