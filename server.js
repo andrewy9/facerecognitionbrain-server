@@ -1,17 +1,20 @@
-const http = require('http');
+import express from 'express' //const express = require('express') in CommonJs
 
-const server = http.createServer((request, response) => {
-  // console.log('headers ', request.headers)
-  console.log('methods ', request.method)
-  console.log('url ', request.url)
+const app = express();
 
-  const user = {
-    name: 'Andrew',
-    hobby: 'Coding'
-  }
-  // response.setHeader('Content-type', 'text/html');
-  response.setHeader('Content-type', 'application/json');
-  response.end(JSON.stringify(user));
+app.use((req, res, next) => {
+  console.log(`<h1>hello<h1>`)
+  next()
 })
 
-server.listen(3000);
+app.get('/', (req, res) => {
+  // res.send('hello')
+  // res.send('<h1>hello</h1>')
+  const user = {
+    name: 'Joe',
+    hobby: 'Singing'
+  }
+  res.send(user)
+})
+
+app.listen(3000);
