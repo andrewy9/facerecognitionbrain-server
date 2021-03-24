@@ -1,10 +1,12 @@
 import express from 'express' //const express = require('express') in CommonJs
 import bcrypt from 'bcrypt-nodejs'
+import cors from 'cors'
 
 const app = express();
 
 //middleware
 app.use(express.json()) //bodyparser.json()
+app.use(cors())
 
 const database = {
   users: [
@@ -12,6 +14,7 @@ const database = {
       id: '123',
       name: 'John',
       email: 'john@gmail.com',
+      password: 'cookies',
       entries: 0,
       joined: new Date()
     },
@@ -19,6 +22,7 @@ const database = {
       id: '124',
       name: 'Sally',
       email: 'sally@gmail.com',
+      password: 'bananas',
       entries: 0,
       joined: new Date()
     }
@@ -37,14 +41,11 @@ app.get('/', (req, res) => {
 })
 
 app.post('/signin', (req, res) => {
-  bcrypt.compare("apples", '$2a$10$H.hB/pvW9tUo6AegZQYT9ub4w09t4.qdWfHqdV3sUk2Nzk0z2FeM2', function (err, res) {
-    console.log('first guess', res)
-  });
   if (req.body.email === database.users[0].email &&
     req.body.password === database.users[0].password) {
-    res.json('sucess!')
+    return res.status(200).json('sucess')
   } else {
-    res.json('sign in');
+    return res.status(400).json('log in error')
   }
 })
 
@@ -88,7 +89,6 @@ app.put('/image', (req, res) => {
       return res.json(user);
     }
   })
-
   if (!found) {
     return res.status(400).json('not found')
   }
@@ -108,6 +108,6 @@ app.put('/image', (req, res) => {
 
 
 
-app.listen(3000, () => {
-  console.log('app is running on port 3000');
+app.listen(3001, () => {
+  console.log('app is running on port 3001');
 });
