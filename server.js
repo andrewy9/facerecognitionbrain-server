@@ -4,23 +4,21 @@ import cors from 'cors'
 import knex from 'knex'
 import _ from './env.js'
 
-// knex({
-//   client: 'pg',
-//   connection: {
-//     host: '127.0.0.1',
-//     user: 'postgres',
-//     password: `${proces.env}`,
-//     database: 'smart-brain'
-//   }
-// });
-
-console.log(process.env.TEST)
+const db = knex({
+  client: 'pg',
+  connection: {
+    host: '127.0.0.1',
+    user: 'postgres',
+    password: `${process.env.DB_PSWD}`,
+    database: 'smart-brain'
+  }
+});
 
 const app = express();
 
 //middleware
-app.use(express.json()) //bodyparser.json()
 app.use(cors())
+app.use(express.json()) //bodyparser.json()
 
 const database = {
   users: [
@@ -51,7 +49,8 @@ const database = {
 }
 
 app.get('/', (req, res) => {
-  res.json(database.users)
+  console.log('hit')
+  res.json(db.user)
 })
 
 app.post('/signin', (req, res) => {
@@ -64,20 +63,24 @@ app.post('/signin', (req, res) => {
 })
 
 app.post('/register', (req, res) => {
+  console.log('register hit')
   const { email, name, password } = req.body;
-  database.users.push({
-    id: '125',
-    name,
-    password,
-    email,
-    entries: 0,
-    joined: new Date()
-  });
-  res.json(database.users[database.users.length - 1])
+  db('users')
+    .returning('*')
+    .insert({
+      email,
+      name,
+      joined: new Date()
+    }).then(user => {
+      console.log(user)
+      return res.status(200).json(user[0]);
+    })
+    .catch(err => res.status(400).json('unable to register'))
 })
 
 
 app.get('/profile/:id', (req, res) => {
+  console.log('this is hit')
   const { id } = req.params;
   let found = false;
   database.users.forEach(user => {
@@ -119,8 +122,6 @@ app.put('/image', (req, res) => {
 // bcrypt.compare("veggies", hash, function(err, res) {
 //   // res = false
 // });
-
-
 
 app.listen(3001, () => {
   console.log('app is running on port 3001');
