@@ -1,6 +1,20 @@
 import express from 'express' //const express = require('express') in CommonJs
 import bcrypt from 'bcrypt-nodejs'
 import cors from 'cors'
+import knex from 'knex'
+import _ from './env.js'
+
+// knex({
+//   client: 'pg',
+//   connection: {
+//     host: '127.0.0.1',
+//     user: 'postgres',
+//     password: `${proces.env}`,
+//     database: 'smart-brain'
+//   }
+// });
+
+console.log(process.env.TEST)
 
 const app = express();
 
