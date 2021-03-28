@@ -2,7 +2,6 @@ import express from 'express' //const express = require('express') in CommonJs
 import bcrypt from 'bcrypt-nodejs'
 import cors from 'cors'
 import knex from 'knex'
-// import _ from './env.js'
 import { handleRegister } from './controllers/register.js'
 import { handleSignin } from './controllers/signin.js'
 import { handleProfile } from './controllers/profile.js'
